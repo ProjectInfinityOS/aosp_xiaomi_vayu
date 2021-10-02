@@ -80,10 +80,11 @@ BOARD_KERNEL_CMDLINE += loop.max_part=7 androidboot.usbcontroller=a600000.dwc3
 BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_BOOTIMG_HEADER_VERSION := 2
-BOARD_PREBUILT_DTBOIMAGE := $(LOCAL_PATH)/kernel-pb/dtbo.img
+BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/kernel-pb/dtbo.img
 BOARD_MKBOOTIMG_ARGS := --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
-TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel-pb/Image
-TARGET_PREBUILT_DTB := $(LOCAL_PATH)/kernel-pb/dtb
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/kernel-pb/Image
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/kernel-pb/dtb
+LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 TARGET_KERNEL_ARCH := arm64
 BOARD_KERNEL_IMAGE_NAME := Image
 ifeq ($(TARGET_PREBUILT_KERNEL),)
@@ -93,8 +94,14 @@ ifeq ($(TARGET_PREBUILT_KERNEL),)
   TARGET_KERNEL_ADDITIONAL_FLAGS += HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
 endif
 
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+
+#
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/kernel-pb/dtb.img:$(TARGET_COPY_OUT)/dtb.img
+    $(LOCAL_KERNEL):kernel \
+
+PRODUCT_COPY_FILES += \
+    $(DEVICE_PATH)/kernel-pb/dtb.img:$(TARGET_COPY_OUT)/dtb.img
 
 
 # NFC
