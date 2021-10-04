@@ -18,6 +18,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/base_vendor.mk)
 
 # Inherit device configurations
 $(call inherit-product, device/xiaomi/vayu/device.mk)
+$(call inherit-product-if-exists, vendor/build/config/BoardConfigAOSP.mk)
 
 PRODUCT_NAME := vayu
 PRODUCT_DEVICE := vayu
