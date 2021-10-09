@@ -17,10 +17,12 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony_system_ext.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony_system.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base_system.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base_vendor.mk)
+# Inherit from audio config
+$(call inherit-product, vendor/nezextras/config/audio.mk)
 
-# Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxhdpi
+PRODUCT_EXTRA_VNDK_VERSIONS := 30
 
 # Shipping level
 PRODUCT_SHIPPING_API_LEVEL := 30
@@ -32,11 +34,16 @@ PRODUCT_SOONG_NAMESPACES += packages/apps/bluetooth
 
 # Atrace
 PRODUCT_PACKAGES += \
-    android.hardware.atrace@1.0-service
+    android.hardware.atrace@1.0-service \
+    android.hardware.drm@1.3 \
+    android.hardware.drm@1.3.vendor
 
 # ANT+
 PRODUCT_PACKAGES += \
     AntHalService-Soong
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/etc/apns-full-conf.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/apns-conf.xml
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -209,11 +216,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
 
-# FM
-PRODUCT_PACKAGES += \
-    FM2 \
-    qcom.fmradio
-
 # Framework detect
 PRODUCT_PACKAGES += \
     libqti_vndfwk_detect \
@@ -370,8 +372,8 @@ PRODUCT_PACKAGES += \
 
 # Neural Networks
 PRODUCT_PACKAGES += \
-    android.hardware.neuralnetworks@1.2 \
-    android.hardware.neuralnetworks@1.2.vendor
+    android.hardware.neuralnetworks@1.3 \
+    android.hardware.neuralnetworks@1.3.vendor
 
 # Overlays
 PRODUCT_PACKAGES += \
@@ -527,4 +529,14 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libnl
 
+BUILD_GMS := yes
+EEA_TYPE := type1
+
+# Theme picker
+PRODUCT_PACKAGES += \
+    ThemePicker \
+    ThemeStub
+
 include vendor/xiaomi/vayu/vayu-vendor.mk
+# Include Nezextras
+include vendor/nezextras/nezextras.mk
